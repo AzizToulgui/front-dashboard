@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { FiDollarSign, FiMoreHorizontal, FiChevronLeft, FiChevronRight, FiEdit, FiTrash2 } from "react-icons/fi"
 import { EditProductModal } from "./EditProductModal"
 
-
 interface Product {
   id: number
   name: string
@@ -134,14 +133,8 @@ export const OurProducts = () => {
           <table className="w-full table-auto">
             <TableHead />
             <tbody>
-              {products.map((product, index) => (
-                <TableRow
-                  key={product.id}
-                  product={product}
-                  order={index + 1}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
+              {products.map((product) => (
+                <TableRow key={product.id} product={product} onEdit={handleEdit} onDelete={handleDelete} />
               ))}
             </tbody>
           </table>
@@ -169,7 +162,7 @@ const TableHead = () => {
   return (
     <thead>
       <tr className="bg-gray-100">
-        <th className="px-4 py-2 text-left">Order</th>
+        <th className="px-4 py-2 text-left">Image</th>
         <th className="px-4 py-2 text-left">Name</th>
         <th className="px-4 py-2 text-left">Description</th>
         <th className="px-4 py-2 text-left">Created At</th>
@@ -181,10 +174,9 @@ const TableHead = () => {
 
 const TableRow = ({
   product,
-  order,
   onEdit,
   onDelete,
-}: { product: Product; order: number; onEdit: (product: Product) => void; onDelete: (id: number) => void }) => {
+}: { product: Product; onEdit: (product: Product) => void; onDelete: (id: number) => void }) => {
   const [showActions, setShowActions] = useState(false)
 
   const formatDate = (dateString: string) => {
@@ -193,8 +185,19 @@ const TableRow = ({
   }
 
   return (
-    <tr className={order % 2 === 0 ? "bg-gray-50" : ""}>
-      <td className="px-4 py-2">{order}</td>
+    <tr className={product.id % 2 === 0 ? "bg-gray-50" : ""}>
+      <td className="px-4 py-2">
+        <div className="relative w-16 h-16">
+          <img
+            src={`http://localhost:4000/uploads/${product.image}`}
+            alt={product.name}
+            className="object-cover w-full h-full rounded"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg?height=64&width=64"
+            }}
+          />
+        </div>
+      </td>
       <td className="px-4 py-2">{product.name}</td>
       <td className="px-4 py-2">{product.description}</td>
       <td className="px-4 py-2">{formatDate(product.created_at)}</td>

@@ -1,41 +1,48 @@
-import React from "react";
-import { IconType } from "react-icons";
-import {
-  FiDollarSign,
+"use client"
 
-  FiPaperclip,
-  FiUsers,
-} from "react-icons/fi";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Users, Package, ShoppingCart } from "lucide-react"
 
 export const RouteSelect = () => {
-  return (
-    <div className="space-y-1">
-      <Route Icon={FiDollarSign} selected={true} title="Products" />
-      <Route Icon={FiPaperclip} selected={false} title="Orders" />
-      <Route Icon={FiUsers} selected={false} title="Users" />
-    </div>
-  );
-};
+  const pathname = usePathname()
 
-const Route = ({
-  selected,
-  Icon,
-  title,
-}: {
-  selected: boolean;
-  Icon: IconType;
-  title: string;
-}) => {
+  const routes = [
+    {
+      href: "/products",
+      label: "Products",
+      icon: Package,
+    },
+    {
+      href: "/orders",
+      label: "Orders",
+      icon: ShoppingCart,
+    },
+    {
+      href: "/users",
+      label: "Users",
+      icon: Users,
+    },
+  ]
+
   return (
-    <button
-      className={`flex items-center justify-start gap-2 w-full rounded px-2 py-1.5 text-sm transition-[box-shadow,_background-color,_color] ${
-        selected
-          ? "bg-white text-stone-950 shadow"
-          : "hover:bg-stone-200 bg-transparent text-stone-500 shadow-none"
-      }`}
-    >
-      <Icon className={selected ? "text-violet-500" : ""} />
-      <span>{title}</span>
-    </button>
-  );
-};
+    <nav className="flex flex-col gap-2 px-2">
+      {routes.map((route) => {
+        const Icon = route.icon
+        return (
+          <Link
+            key={route.href}
+            href={route.href}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-stone-200 transition-colors ${
+              pathname === route.href ? "bg-stone-200" : ""
+            }`}
+          >
+            <Icon size={20} />
+            <span>{route.label}</span>
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+

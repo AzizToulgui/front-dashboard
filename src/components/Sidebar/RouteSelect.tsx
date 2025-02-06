@@ -14,15 +14,16 @@ export const RouteSelect = () => {
       icon: Package,
     },
     {
-      href: "/orders",
-      label: "Orders",
-      icon: ShoppingCart,
-    },
-    {
       href: "/users",
       label: "Users",
       icon: Users,
     },
+    {
+      href: "/orders",
+      label: "Orders",
+      icon: ShoppingCart,
+    },
+    
   ]
 
   return (

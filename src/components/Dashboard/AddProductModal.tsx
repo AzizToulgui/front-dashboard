@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
 import { FiX } from "react-icons/fi"
@@ -5,9 +7,10 @@ import { FiX } from "react-icons/fi"
 interface AddProductModalProps {
   isOpen: boolean
   onClose: () => void
+  onAdd: () => void
 }
 
-export const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
+const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAdd }) => {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [image, setImage] = useState<File | null>(null)
@@ -31,8 +34,12 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClos
       if (response.ok) {
         const product = await response.json()
         console.log("Product added successfully:", product)
+        onAdd()
         onClose()
-        // You might want to refresh the product list or show a success message here
+        // Reset form fields
+        setName("")
+        setDescription("")
+        setImage(null)
       } else {
         const errorData = await response.json()
         console.error("Failed to add product:", errorData)
@@ -88,7 +95,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClos
               id="image"
               onChange={(e) => setImage(e.target.files?.[0] || null)}
               className="w-full"
-              accept="image/png,image/jpeg,image/jpg"
+              accept="image/*"
               required
             />
           </div>
@@ -112,4 +119,6 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClos
     </div>
   )
 }
+
+export default AddProductModal
 

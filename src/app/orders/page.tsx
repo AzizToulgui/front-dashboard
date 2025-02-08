@@ -2,7 +2,6 @@
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { TopBar } from "@/components/Dashboard/TopBar"
 import { ChevronDown, Package2, Clock, User2 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
@@ -27,6 +26,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [, forceUpdate] = useState({})
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -40,6 +40,11 @@ export default function OrdersPage() {
     }
 
     fetchOrders()
+
+    // Update time every minute
+    const intervalId = setInterval(() => forceUpdate({}), 60000)
+
+    return () => clearInterval(intervalId)
   }, [])
 
   const handleDelete = async (orderId: number) => {
@@ -56,7 +61,7 @@ export default function OrdersPage() {
 
   return (
     <div className="bg-white rounded-lg p-4 shadow">
-        <div className="col-span-12 p-4 rounded border border-stone-300">
+      <div className="col-span-12 p-4 rounded border border-stone-300">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center gap-1.5 font-medium">
             <Package2 className="h-4 w-4" /> Latest Orders
@@ -93,14 +98,18 @@ export default function OrdersPage() {
                       {formatDistanceToNow(new Date(order.created_at), { addSuffix: true })}
                     </div>
                     <ChevronDown
-                      className={`h-5 w-5 text-gray-500 transition-transform ${
+                      className={`h-5 w-5 text-gray-500 transition-transform duration-500 ${
                         expandedOrder === order.id ? "rotate-180" : ""
                       }`}
                     />
                   </div>
                 </div>
               </div>
-              {expandedOrder === order.id && (
+              <div
+                className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${
+                  expandedOrder === order.id ? "max-h-[1000px]" : "max-h-0"
+                }`}
+              >
                 <div className="p-4 bg-gray-50">
                   <div className="space-y-4">
                     <div>
@@ -137,7 +146,7 @@ export default function OrdersPage() {
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>

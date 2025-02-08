@@ -4,53 +4,63 @@ import type React from "react"
 import { useState } from "react"
 import { FiX } from "react-icons/fi"
 
-interface User {
-  id: number
-  firstname: string
-  lastname: string
-  email: string
-  created_at: string
-  modifiedAt: string
-  isAdmin?: boolean
-}
-
-interface EditUserModalProps {
-  user: User
+interface AddUserModalProps {
+  isOpen: boolean
   onClose: () => void
-  onUpdate: (updatedUser: User) => void
+  onAdd: () => void
 }
 
-export const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onUpdate }) => {
-  const [firstname, setFirstname] = useState(user.firstname)
-  const [lastname, setLastname] = useState(user.lastname)
-  const [email, setEmail] = useState(user.email)
-  const [isAdmin, setIsAdmin] = useState(user.isAdmin || false)
+const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onAdd }) => {
+  const [firstname, setFirstname] = useState("")
+  const [lastname, setLastname] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const updatedUser = {
-      ...user,
+    const userData = {
       firstname,
       lastname,
       email,
-      isAdmin,
+      password,
     }
 
     try {
-      await onUpdate(updatedUser)
+      const response = await fetch("http://localhost:4000/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      })
+
+      if (response.ok) {
+        const user = await response.json()
+        console.log("User added successfully:", user)
+        onAdd()
+        onClose()
+        // Reset form fields
+        setFirstname("")
+        setLastname("")
+        setEmail("")
+        setPassword("")
+      } else {
+        const errorData = await response.json()
+        console.error("Failed to add user:", errorData)
+      }
     } catch (error) {
-      console.error("Error updating user:", error)
+      console.error("Error adding user:", error)
     }
   }
 
-  if (!user) return null
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Edit User</h2>
+          <h2 className="text-lg font-bold">Add a New User</h2>
           <button onClick={onClose} className="text-stone-500 hover:text-stone-700">
             <FiX size={24} />
           </button>
@@ -96,15 +106,16 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onU
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="isAdmin" className="block text-sm font-medium text-stone-700 mb-1">
-              Is Admin
+            <label htmlFor="password" className="block text-sm font-medium text-stone-700 mb-1">
+              Password
             </label>
             <input
-              type="checkbox"
-              id="isAdmin"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-              className="focus:ring-1 focus:ring-violet-500"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
+              required
             />
           </div>
           <div className="flex justify-end gap-2">
@@ -119,7 +130,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onU
               type="submit"
               className="px-4 py-2 text-sm bg-violet-100 text-violet-700 rounded hover:bg-violet-200 transition-colors"
             >
-              Update User
+              Add User
             </button>
           </div>
         </form>
@@ -127,4 +138,6 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onU
     </div>
   )
 }
+
+export default AddUserModal
 

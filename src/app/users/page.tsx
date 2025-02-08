@@ -2,10 +2,11 @@
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { FiMoreHorizontal } from "react-icons/fi"
+import { FiMoreHorizontal, FiUserPlus } from "react-icons/fi"
 import { Users } from "lucide-react"
 import { TopBar } from "@/components/Dashboard/TopBar"
 import { EditUserModal } from "./EditUserModal"
+import AddUserModal from "./AddUserModal"
 
 interface User {
   id: number
@@ -14,7 +15,6 @@ interface User {
   email: string
   created_at: string
   modifiedAt: string
-  isAdmin?: boolean
 }
 
 interface PaginationInfo {
@@ -35,6 +35,7 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false)
 
   const fetchUsers = async (page = 1, search = "") => {
     try {
@@ -104,6 +105,12 @@ export default function UsersPage() {
 
   return (
     <div className="bg-white rounded-lg p-4 shadow">
+      <TopBar
+        greeting="Manage Users"
+        actionLabel="Add User"
+        actionIcon={<FiUserPlus />}
+        onActionClick={() => setIsAddUserModalOpen(true)}
+      />
       <div className="col-span-12 p-4 rounded border border-stone-300 ">
         <div className="mb-4 flex items-center justify-between ">
           <h3 className="flex items-center gap-1.5 font-medium">
@@ -138,6 +145,15 @@ export default function UsersPage() {
         </div>
         {editingUser && (
           <EditUserModal user={editingUser} onClose={() => setEditingUser(null)} onUpdate={handleUpdateUser} />
+        )}
+        {isAddUserModalOpen && (
+          <AddUserModal
+            isOpen={isAddUserModalOpen}
+            onClose={() => setIsAddUserModalOpen(false)}
+            onAdd={() => {
+              fetchUsers(paginationInfo.page, searchQuery)
+            }}
+          />
         )}
       </div>
     </div>

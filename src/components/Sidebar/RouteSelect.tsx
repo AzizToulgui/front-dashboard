@@ -2,28 +2,27 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Users, Package, ShoppingCart } from "lucide-react"
+import { Package, Users, ShoppingCart } from "lucide-react"
 
 export const RouteSelect = () => {
   const pathname = usePathname()
 
   const routes = [
     {
-      href: "/products",
+      href: "/dashboard/products",
       label: "Products",
       icon: Package,
     },
     {
-      href: "/users",
+      href: "/dashboard/users",
       label: "Users",
       icon: Users,
     },
     {
-      href: "/orders",
+      href: "/dashboard/orders",
       label: "Orders",
       icon: ShoppingCart,
     },
-    
   ]
 
   return (
@@ -46,4 +45,6 @@ export const RouteSelect = () => {
     </nav>
   )
 }
+
+export default RouteSelect
 

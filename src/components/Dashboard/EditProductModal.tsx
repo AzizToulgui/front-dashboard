@@ -1,6 +1,6 @@
 "use client"
 
-import  React from "react"
+import React from "react"
 import { useState } from "react"
 import { FiX } from "react-icons/fi"
 
@@ -9,6 +9,7 @@ interface Product {
   name: string
   description: string
   image: string
+  price: number
   created_at: string
   modifiedAt: string
 }
@@ -24,7 +25,10 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onC
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setEditedProduct((prev) => ({ ...prev, [name]: value }))
+    setEditedProduct((prev) => ({
+      ...prev,
+      [name]: name === 'price' ? parseFloat(value) || 0 : value
+    }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,7 +41,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onC
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Edit Product</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700" aria-label="Close">
             <FiX size={24} />
           </button>
         </div>
@@ -70,6 +74,22 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onC
               required
             />
           </div>
+          <div className="mb-4">
+            <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={editedProduct.price}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
           <div className="flex justify-end">
             <button
               type="button"
@@ -90,4 +110,3 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onC
     </div>
   )
 }
-

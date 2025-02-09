@@ -13,6 +13,7 @@ interface AddProductModalProps {
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAdd }) => {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
+  const [price, setPrice] = useState("")
   const [image, setImage] = useState<File | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,6 +22,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAd
     const formData = new FormData()
     formData.append("name", name)
     formData.append("description", description)
+    formData.append("price", price)
     if (image) {
       formData.append("image", image)
     }
@@ -39,6 +41,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAd
         // Reset form fields
         setName("")
         setDescription("")
+        setPrice("")
         setImage(null)
       } else {
         const errorData = await response.json()
@@ -56,7 +59,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAd
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Add a New Product</h2>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-700">
+          <button onClick={onClose} className="text-stone-500 hover:text-stone-700" aria-label="Close">
             <FiX size={24} />
           </button>
         </div>
@@ -83,6 +86,21 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onAd
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="price" className="block text-sm font-medium text-stone-700 mb-1">
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="w-full px-3 py-2 border border-stone-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
+              step="0.01"
+              min="0"
               required
             />
           </div>

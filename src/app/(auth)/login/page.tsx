@@ -4,14 +4,37 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import type React from "react"
+import axios from "axios"
 
 export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    router.push("/dashboard/products")
+    setError("")
+    setIsLoading(true)
+
+    try {
+      const response = await axios.post("http://localhost:4000/user/login", { email, password })
+      const { access_token, user } = response.data
+
+      // Store the token and user info (you might want to use a more secure storage method in a real app)
+      localStorage.setItem("access_token", access_token)
+      localStorage.setItem("user", JSON.stringify(user))
+
+      // Redirect to dashboard
+      router.push("/dashboard/products")
+    } catch (err) {
+      setError("Invalid email or password")
+      console.error("Login error:", err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -23,7 +46,8 @@ export default function LoginPage() {
             <p className="mt-2 text-sm text-gray-600">Enter your credentials to access your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
+            {error && <div className="text-red-500 text-sm">{error}</div>}
             <div>
               <label className="text-sm font-medium" htmlFor="email">
                 Email address
@@ -34,6 +58,8 @@ export default function LoginPage() {
                 placeholder="Enter your email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -41,9 +67,9 @@ export default function LoginPage() {
                 <label className="text-sm font-medium" htmlFor="password">
                   Password
                 </label>
-                <button type="button" className="text-sm text-[#7C3AED] hover:text-[#7C3AED]/90">
+                {/* <button type="button" className="text-sm text-[#7C3AED] hover:text-[#7C3AED]/90">
                   Forgot password?
-                </button>
+                </button> */}
               </div>
               <div className="relative mt-1">
                 <input
@@ -52,6 +78,8 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   type={showPassword ? "text" : "password"}
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -65,9 +93,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-[#7C3AED] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7C3AED]/90"
+              className="w-full rounded-lg bg-[#7C3AED] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#7C3AED]/90 disabled:opacity-50"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
         </div>

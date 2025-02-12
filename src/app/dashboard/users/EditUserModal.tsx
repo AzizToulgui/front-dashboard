@@ -95,18 +95,7 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({ user, onClose, onU
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="isAdmin" className="block text-sm font-medium text-stone-700 mb-1">
-              Is Admin
-            </label>
-            <input
-              type="checkbox"
-              id="isAdmin"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-              className="focus:ring-1 focus:ring-violet-500"
-            />
-          </div>
+         
           <div className="flex justify-end gap-2">
             <button
               type="button"

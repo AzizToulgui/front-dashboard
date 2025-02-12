@@ -45,7 +45,20 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         const { data } = await axios.get("http://localhost:4000/order")
-        setOrders(data)
+        console.log("Raw API response:", data)
+
+        // Check each order's structure
+        const ordersWithProducts = data.map((order: any) => {
+          console.log(`Order #${order.id} products:`, order.products)
+          return {
+            ...order,
+            // Ensure products is always an array
+            products: Array.isArray(order.products) ? order.products : [],
+          }
+        })
+
+        console.log("Processed orders:", ordersWithProducts)
+        setOrders(ordersWithProducts)
       } catch (error) {
         setError("Failed to fetch orders")
         console.error("Error fetching orders:", error)
@@ -88,7 +101,13 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         const { data } = await axios.get("http://localhost:4000/order")
-        setOrders(data)
+        console.log("New order added - API response:", data)
+        setOrders(
+          data.map((order: any) => ({
+            ...order,
+            products: Array.isArray(order.products) ? order.products : [],
+          })),
+        )
       } catch (error) {
         setError("Failed to fetch orders")
         console.error("Error fetching orders:", error)
@@ -101,7 +120,13 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         const { data } = await axios.get("http://localhost:4000/order")
-        setOrders(data)
+        console.log("Order updated - API response:", data)
+        setOrders(
+          data.map((order: any) => ({
+            ...order,
+            products: Array.isArray(order.products) ? order.products : [],
+          })),
+        )
       } catch (error) {
         setError("Failed to fetch orders")
         console.error("Error fetching orders:", error)
@@ -200,7 +225,7 @@ export default function OrdersPage() {
                     <div>
                       <h4 className="text-sm font-medium mb-2">Products</h4>
                       <div className="space-y-2">
-                        {order.products && order.products.length > 0 ? (
+                        {Array.isArray(order.products) && order.products.length > 0 ? (
                           order.products.map((product) => (
                             <div
                               key={product.id}

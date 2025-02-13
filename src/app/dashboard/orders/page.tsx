@@ -2,7 +2,7 @@
 
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { ChevronDown, Package2, Clock, User2, ShoppingCart, DollarSign, Tag, Edit } from "lucide-react"
+import { ChevronDown, Package2, Clock, User2, ShoppingCart, DollarSign, Tag, Edit, Phone, MapPin } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import AddOrderModal from "./AddOrderModal"
 import EditOrderModal from "./EditOrderModal"
@@ -20,6 +20,8 @@ interface Order {
   firstname: string
   lastname: string
   email: string
+  phoneNumber: string
+  address: string
   products: Product[]
   created_at: string
   modifiedAt: string
@@ -248,6 +250,14 @@ export default function OrdersPage() {
                       <div className="bg-white p-3 rounded border">
                         <div className="text-sm">
                           <div>{order.email}</div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <Phone className="h-3 w-3" />
+                            {order.phoneNumber}
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <MapPin className="h-3 w-3" />
+                            {order.address}
+                          </div>
                         </div>
                       </div>
                     </div>

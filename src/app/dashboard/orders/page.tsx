@@ -7,6 +7,7 @@ import { formatDistanceToNow } from "date-fns"
 import AddOrderModal from "./AddOrderModal"
 import EditOrderModal from "./EditOrderModal"
 
+
 interface Product {
   id: number
   name: string
@@ -144,7 +145,7 @@ export default function OrdersPage() {
   })
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow">
+    <div className="bg-white rounded-lg p-4 shadow " >
       <div className="border-b px-4 mb-4 mt-2 pb-4 border-stone-200">
         <div className="flex items-center justify-between p-0.5">
           <div>
@@ -181,7 +182,7 @@ export default function OrdersPage() {
                   <div className="flex items-center gap-3">
                     <div className="flex flex-col">
                       <div className="font-medium flex items-center gap-2">
-                        Order #{order.id}
+                        {order.firstname} {order.lastname}
                         <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
                           {order.products.length} items
                         </span>
@@ -197,7 +198,7 @@ export default function OrdersPage() {
                       </div>
                       <div className="text-sm text-gray-500 flex items-center gap-2">
                         <User2 className="h-3 w-3" />
-                        {order.firstname} {order.lastname}
+                        Order #{order.id}
                       </div>
                     </div>
                   </div>

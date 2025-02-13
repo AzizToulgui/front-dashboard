@@ -136,7 +136,10 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ isOpen, onClose, onOrderA
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div ref={modalRef} className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto overflow-x-hidden"
+      >
         <div className="sticky top-0 bg-white z-10 px-6 py-4 border-b">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold">Add New Order</h2>
@@ -214,14 +217,14 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ isOpen, onClose, onOrderA
                   required
                 />
               </div>
-              <div>
+              <div className="mb-4 space-y-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Products</label>
                 {selectedProducts.map((selection, index) => (
-                  <div key={index} className="flex items-center gap-2 mb-2">
+                  <div key={index} className="flex items-center gap-2 mb-2 flex-wrap">
                     <select
                       value={selection.productId}
                       onChange={(e) => handleProductChange(index, Number(e.target.value))}
-                      className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
+                      className="flex-grow min-w-0 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
                       required
                     >
                       <option value={0}>Select a product</option>
@@ -238,28 +241,30 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ isOpen, onClose, onOrderA
                         </option>
                       ))}
                     </select>
-                    <input
-                      type="number"
-                      min="1"
-                      value={selection.quantity}
-                      onChange={(e) => handleQuantityChange(index, Math.max(1, Number.parseInt(e.target.value) || 1))}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeProductSelection(index)}
-                      className="p-2 text-red-500 hover:text-red-700"
-                      aria-label="Remove product"
-                    >
-                      <Trash2 size={20} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        value={selection.quantity}
+                        onChange={(e) => handleQuantityChange(index, Math.max(1, Number.parseInt(e.target.value) || 1))}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-violet-500"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeProductSelection(index)}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove product"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
                   </div>
                 ))}
                 <button
                   type="button"
                   onClick={addProductSelection}
-                  className="mt-2 px-4 py-2 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors flex items-center"
+                  className="mt-2 px-4 py-2 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors flex items-center w-full justify-center"
                 >
                   <Plus size={16} className="mr-1" /> Add More Products
                 </button>

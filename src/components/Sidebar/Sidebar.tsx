@@ -7,12 +7,13 @@ import { Plan } from "./Plan";
 export const Sidebar = () => {
   return (
     <div>
-      <div className="shadow-md sticky top-4 h-[calc(100vh-32px-48px)] p-4 rounded-lg">
+      <div className="shadow-md  sticky top-4 h-[calc(100vh-32px-48px)] p-4 rounded-lg">
         <AccountToggle />
         <RouteSelect />
+        <Plan />
+
       </div>
 
-        {/* <Plan /> */}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link"
 
 export const Plan = () => {
   return (
@@ -9,10 +9,16 @@ export const Plan = () => {
           <p className="text-stone-500">Enterprise</p>
         </div>
 
-        <button className="px-2 py-1.5 font-medium bg-stone-200 hover:bg-stone-300 transition-colors rounded">
+        <Link
+          href="https://www.instagram.com/karrierytn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-2 py-1.5 font-medium bg-stone-200 hover:bg-stone-300 transition-colors rounded inline-block"
+        >
           Support us
-        </button>
+        </Link>
       </div>
     </div>
-  );
-};
+  )
+}
+
